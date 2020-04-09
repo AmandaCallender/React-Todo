@@ -1,91 +1,86 @@
 import React from "react";
 import TodoList from "./components/TodoList";
 import TodoForm from "./components/TodoForm";
+import "./components/Todo.css";
 
-const ACTasks = [
+const tasks = [
   {
-    name: "Pick Fruit",
-    id: Date.now(),
-    finished: false,
+    task: "Pick Fruit",
+    id: 10,
+    completed: false,
   },
   {
-    name: "Catch Fish",
-    id: Date.now(),
-    finished: false,
+    task: "Catch Fish",
+    id: 20,
+    completed: false,
   },
   {
-    name: "Dig for Fossils",
-    id: Date.now(),
-    finished: false,
+    task: "Dig for Fossils",
+    id: 30,
+    completed: false,
   },
   {
-    name: "Catch Bugs",
-    id: Date.now(),
-    finished: false,
+    task: "Catch Bugs",
+    id: 40,
+    completed: false,
   },
   {
-    name: "Talk to Villagers",
-    id: Date.now(),
-    finished: false,
+    task: "Talk to Villagers",
+    id: 50,
+    completed: false,
   },
 ];
 
 class App extends React.Component {
-  // you will need a place to store your state in this component.
-  // design `App` to be the parent component of your application.
-  // this component is going to take care of state, and any change handlers you need to work with your state
   constructor() {
     super();
-    this.state = {
-      tasks: ACTasks,
-    };
+    this.state = { tasks };
   }
-  toggleCompleted = (itemId) => {
-    console.log("dg: app.js: App: toggleCompleted: itemId:", itemId);
+
+  addTask = (e, task) => {
+    e.preventDefault();
+
+    const newTask = {
+      task: task,
+      id: Date.now(),
+      completed: false,
+    };
+
     this.setState({
-      tasks: this.state.tasks.map((item) => {
-        if (item.id === itemId) {
+      tasks: [...this.state.tasks, newTask],
+    });
+  };
+
+  toggleComplete = (taskId) => {
+    this.setState({
+      tasks: this.state.tasks.map((task) => {
+        if (taskId === task.id) {
           return {
-            ...item,
-            finished: !item.finished,
+            ...task,
+            completed: !task.completed,
           };
         }
-        return item;
+        return task;
       }),
     });
   };
 
-  addItem = (itemName) => {
+  clearCompleted = (e) => {
+    e.preventDefault();
     this.setState({
-      tasks: [
-        ...this.state.tasks,
-        {
-          name: itemName,
-          finished: false,
-          id: Date.now(),
-        },
-      ],
-    });
-  };
-
-  clearCompleted = () => {
-    console.log("dg: app.js: App: clearCompleted:");
-    this.setState({
-      tasks: this.state.tasks.filter((item) => {
-        return !item.finished;
-      }),
+      tasks: this.state.tasks.filter((task) => task.completed === false),
     });
   };
   render() {
     return (
-      <div className="App">
-        <div className="header">
-          <h1 className="todo-list">Todo List</h1>
-          <TodoForm addItem={this.addItem} />
+      <div className="Container">
+        <div>
+          <h2>Welcome to your Animal Crossing To Do App!</h2>
+          <TodoForm addTask={this.addTask} />
         </div>
         <TodoList
           tasks={this.state.tasks}
-          toggleCompleted={this.toggleCompleted}
+          toggleComplete={this.toggleComplete}
           clearCompleted={this.clearCompleted}
         />
       </div>
